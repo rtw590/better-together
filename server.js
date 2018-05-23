@@ -90,6 +90,9 @@ app.get("/", function(req, res) {
 let users = require("./routes/users");
 app.use("/users", users);
 
+let wallPosts = require("./routes/wallPosts");
+app.use("/wallPosts", wallPosts);
+
 app.set("port", process.env.PORT || 8000);
 
 app.listen(app.get("port"), function() {

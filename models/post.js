@@ -34,5 +34,6 @@ let wallPostSchema = mongoose.Schema({
 });
 
 let Post = (module.exports = mongoose.model("Post", wallPostSchema));
+let WallPost = (module.exports = mongoose.model("WallPost", wallPostSchema));
 
 module.exports = wallPostSchema;
