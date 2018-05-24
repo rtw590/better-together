@@ -106,17 +106,4 @@ router.get("/profile/:id", function(req, res) {
   });
 });
 
-// View User Profile - Working before I messed with it
-// router.get("/profile/:id", function(req, res) {
-//   User.findOne({ username: req.params.id }, function(err, user) {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       res.render("profile", {
-//         user
-//       });
-//     }
-//   });
-// });
-
 module.exports = router;
