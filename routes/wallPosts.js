@@ -12,12 +12,16 @@ router.post("/add", function(req, res) {
 
   // get errors
 
-  // let errors = req.validationErrors();
-  let errors = null;
+  let errors = req.validationErrors();
   let body = req.body.body;
 
+  // TODO: Fix what happens when there are errors
   if (errors) {
-    res.send("errors occured");
+    res.render("add_post", {
+      errors: errors,
+      body: body,
+      title: title
+    });
   } else {
     let post = new WallPost();
     post.author = req.user._id;
