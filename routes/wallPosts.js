@@ -20,10 +20,10 @@ router.post("/add", function(req, res) {
     res.send("errors occured");
   } else {
     let post = new WallPost();
-    // post.author = req.user._id;
-    post.author = req.body.author;
+    post.author = req.user._id;
+    post.profilePostedOn = req.body.profilePostedOn;
     post.body = req.body.body;
-    post.username = user.username;
+    post.username = req.body.username;
     post.likes = 0;
 
     post.save(function(err) {

@@ -1,12 +1,25 @@
 <div class="container">
   <h1>Profile of {{ user.firstname }}</h1>
 
-  <div class="profilePage">
+  <div class="container">
 
-
-
+    <form action="/wallPosts/add" method="POST">
+      <h1>Add Post</h1>
+      <div class="form-group">
+        <label>Message:</label>
+        <textarea name="body" style="width:100%">{{body}}</textarea>
+      </div>
+      <div class="form-group">
+        <label>profilePostedOn:</label>
+        <textarea name="profilePostedOn" style="width:100%">{{user.username}}</textarea>
+      </div>
+      <input type="submit" value="Submit" class="btn btn-warning">
+    </form>
 
   </div>
+
+
+
 
 </div>
 

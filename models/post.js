@@ -1,7 +1,10 @@
 let mongoose = require("mongoose");
 
+//Define a schema
+var Schema = mongoose.Schema;
+
 // post Schema
-let commentSchema = mongoose.Schema({
+let CommentSchema = new Schema({
   author: {
     type: String
   },
@@ -11,10 +14,18 @@ let commentSchema = mongoose.Schema({
   },
   username: {
     type: String
+  },
+  date: {
+    type: Date,
+    default: Date.now
   }
 });
 
-let wallPostSchema = mongoose.Schema({
+let WallPostSchema = new Schema({
+  profilePostedOn: {
+    type: String,
+    required: true
+  },
   author: {
     type: String,
     required: true
@@ -30,10 +41,11 @@ let wallPostSchema = mongoose.Schema({
     type: Number
   },
   likedBy: [],
-  comments: [commentSchema]
+  comments: [CommentSchema],
+  date: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-let Post = (module.exports = mongoose.model("Post", wallPostSchema));
-let WallPost = (module.exports = mongoose.model("WallPost", wallPostSchema));
-
-module.exports = wallPostSchema;
+let WallPost = (module.exports = mongoose.model("WallPost", WallPostSchema));
