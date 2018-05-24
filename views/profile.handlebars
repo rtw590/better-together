@@ -3,6 +3,15 @@
 
   <div class="container">
 
+    {{# each posts }}
+    <div class="ml-5">
+      <h1>{{ this.body }}</h1>
+      <a href="/users/profile/{{ this.username }}">{{ this.username }}</a>
+      <br>
+    </div>
+    <div class="divider"></div>
+    {{/each}}
+
     <form action="/wallPosts/add" method="POST">
       <h1>Add Post</h1>
       <div class="form-group">

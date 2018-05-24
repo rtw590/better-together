@@ -5,6 +5,7 @@ const passport = require("passport");
 
 //Bring in User Model
 let User = require("../models/user");
+let WallPost = require("../models/post");
 
 // Register Form
 router.get("/register", function(req, res) {
@@ -91,28 +92,31 @@ router.get("/profile/:id", function(req, res) {
     if (err) {
       console.log(err);
     } else {
-      res.render("profile", {
-        user
+      WallPost.find({ profilePostedOn: req.params.id }, function(err, posts) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.render("profile", {
+            user,
+            posts
+          });
+        }
       });
     }
   });
 });
 
-// View User Profile --- Copppied from blackhole
+// View User Profile - Working before I messed with it
 // router.get("/profile/:id", function(req, res) {
-//     Post.find({ author: req.params.id }, function(err, posts) {
-//       User.findById(req.params.id, function(err, user) {
-//         let profile = user.username;
-//         if (err) {
-//           console.log(err);
-//         } else {
-//           res.render("profile", {
-//             posts: posts,
-//             profile: profile
-//           });
-//         }
+//   User.findOne({ username: req.params.id }, function(err, user) {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       res.render("profile", {
+//         user
 //       });
-//     });
+//     }
 //   });
+// });
 
 module.exports = router;
