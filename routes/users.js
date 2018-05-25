@@ -88,20 +88,25 @@ router.get("/logout", function(req, res) {
 
 // View User Profile
 router.get("/profile/:id", function(req, res) {
-  User.findOne({ username: req.params.id }, function(err, user) {
+  User.findOne({ username: req.params.id }, function(err, userProfile) {
     if (err) {
       console.log(err);
     } else {
-      WallPost.find({ profilePostedOn: req.params.id }, function(err, posts) {
-        if (err) {
-          console.log(err);
-        } else {
-          res.render("profile", {
-            user,
-            posts
-          });
+      WallPost.find(
+        { profilePostedOn: req.params.id },
+        null,
+        { sort: "-date" },
+        function(err, posts) {
+          if (err) {
+            console.log(err);
+          } else {
+            res.render("profile", {
+              userProfile,
+              posts
+            });
+          }
         }
-      });
+      );
     }
   });
 });

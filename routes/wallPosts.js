@@ -7,7 +7,7 @@ let WallPost = require("../models/post");
 let User = require("../models/user");
 
 // Add POST route for posts
-router.post("/add/:id", function(req, res) {
+router.post("/add/:id", ensureAuthenticated, function(req, res) {
   req.checkBody("body", "Body is required").notEmpty();
 
   // get errors
@@ -35,7 +35,7 @@ router.post("/add/:id", function(req, res) {
           return;
         } else {
           req.flash("success", "Post Added");
-          res.redirect("/");
+          res.redirect(`/users/profile/${req.params.id}`);
         }
       });
     });
