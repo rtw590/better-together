@@ -42,6 +42,28 @@ router.post("/add/:id", ensureAuthenticated, function(req, res) {
   }
 });
 
+// Add POST route for commments
+router.post("/comment/:id", ensureAuthenticated, function(req, res) {
+  WallPost.findById(req.params.id, function(err, post) {
+    User.findById(req.user._id, function(err, user) {
+      post.comments.push({
+        author: req.user._id,
+        body: req.body.body,
+        username: user.username
+      });
+      post.save(function(err) {
+        if (err) {
+          console.log(err);
+          return;
+        } else {
+          // TODO CHange redirect
+          res.redirect("/posts/" + req.params.id);
+        }
+      });
+    });
+  });
+});
+
 // Access control
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {

@@ -1,0 +1,10 @@
+.divider {
+  height: 2px;
+  width: 100%;
+  background-color: rgb(40, 167, 69);
+}
+
+.commentsList {
+  list-style: none;
+  padding: 0px;
+}
