@@ -33,7 +33,7 @@
         <div class="card-body">
           <form action="/wallPosts/add/{{ userProfile.username }}" method="POST">
             <div class="form-group">
-              <textarea name="body" style="width:100%">{{body}}</textarea>
+              <textarea name="body" style="width:100%" placeholder="Leave a post...">{{body}}</textarea>
             </div>
             <input type="submit" value="Post" style="width:65%" class="btn btn-success">
           </form>
@@ -52,7 +52,8 @@
           <h5 class="card-text">{{ this.body }}</h5>
         </div>
         <div class="card-footer text-muted">
-          Like
+          <a href="/wallPosts/like/{{ this._id }}" class="btn btn-success btn-md " style="">Like</a>
+
           <button type="button" class="btn btn-success">
 
             <span class="badge badge-light">{{ this.likes }}</span>
@@ -81,7 +82,7 @@
             <div class="card-body">
               <form action="/wallPosts/comment/{{ this._id }}" method="POST">
                 <div class="form-group">
-                  <textarea name="body" style="width:100%;"></textarea>
+                  <textarea name="body" style="width:100%;" placeholder="Comment..."></textarea>
                 </div>
                 <input type="submit" value="Post Comment" class="btn btn-primary" class="text-center">
               </form>

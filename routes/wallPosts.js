@@ -64,6 +64,22 @@ router.post("/comment/:id", ensureAuthenticated, function(req, res) {
   });
 });
 
+// Upvote a Post
+router.get("/like/:id", ensureAuthenticated, function(req, res) {
+  WallPost.findById(req.params.id, function(err, post) {
+    if (post.likedBy.includes(req.user._id.toString())) {
+      req.flash("success", "Only One Upvote Per Post");
+      res.redirect(`/users/profile/${post.profilePostedOn}`);
+    } else {
+      post.likedBy.push(req.user._id.toString());
+      post.likes += 1;
+      post.save();
+      req.flash("success", "Post Liked");
+      res.redirect(`/users/profile/${post.profilePostedOn}`);
+    }
+  });
+});
+
 // Access control
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
