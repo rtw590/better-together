@@ -57,18 +57,19 @@ router.post("/comment/:id", ensureAuthenticated, function(req, res) {
           return;
         } else {
           // TODO CHange redirect
-          res.redirect("/posts/" + req.params.id);
+          req.flash("success", "Comment Added");
+          res.redirect(`/users/profile/${post.profilePostedOn}`);
         }
       });
     });
   });
 });
 
-// Upvote a Post
+// Like a Post
 router.get("/like/:id", ensureAuthenticated, function(req, res) {
   WallPost.findById(req.params.id, function(err, post) {
     if (post.likedBy.includes(req.user._id.toString())) {
-      req.flash("success", "Only One Upvote Per Post");
+      req.flash("success", "Post Unliked");
       res.redirect(`/users/profile/${post.profilePostedOn}`);
     } else {
       post.likedBy.push(req.user._id.toString());
