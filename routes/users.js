@@ -100,6 +100,16 @@ router.get("/profile/:id", function(req, res) {
           if (err) {
             console.log(err);
           } else {
+            if (req.user != undefined) {
+              postsArray = posts.forEach(function(element) {
+                if (element.author === req.user._id.toString()) {
+                  element.edit = true;
+                } else {
+                  element.edit = false;
+                }
+              });
+              console.log(postsArray);
+            }
             res.render("profile", {
               userProfile,
               posts
