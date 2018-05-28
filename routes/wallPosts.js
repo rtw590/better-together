@@ -70,6 +70,12 @@ router.get("/like/:id", ensureAuthenticated, function(req, res) {
   WallPost.findById(req.params.id, function(err, post) {
     if (post.likedBy.includes(req.user._id.toString())) {
       req.flash("success", "Post Unliked");
+      filteredArray = post.likedBy.filter(
+        item => item !== req.user._id.toString()
+      );
+      post.likedBy = filteredArray;
+      post.likes -= 1;
+      post.save();
       res.redirect(`/users/profile/${post.profilePostedOn}`);
     } else {
       post.likedBy.push(req.user._id.toString());
