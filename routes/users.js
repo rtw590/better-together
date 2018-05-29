@@ -101,15 +101,15 @@ router.get("/profile/:id", function(req, res) {
             console.log(err);
           } else {
             if (req.user != undefined) {
-              postsArray = posts.forEach(function(element) {
-                if (element.author === req.user._id.toString()) {
-                  element.edit = true;
+              posts = posts.map(function(object) {
+                if (object.author == req.params.id) {
+                  return Object.assign({ edit: true }, object);
                 } else {
-                  element.edit = false;
+                  return Object.assign({ edit: false }, object);
                 }
               });
-              console.log(postsArray);
             }
+            console.log(posts);
             res.render("profile", {
               userProfile,
               posts
