@@ -102,21 +102,20 @@ router.get("/profile/:id", function(req, res) {
           } else {
             if (req.user != undefined) {
               posts = posts.map(function(object) {
-                if (object.author == req.params.id) {
+                if (object.author == req.user._id.toString()) {
                   return Object.assign({ edit: true }, object);
                 } else {
                   return Object.assign({ edit: false }, object);
                 }
               });
             }
-            console.log(posts);
             res.render("profile", {
               userProfile,
               posts
             });
           }
         }
-      );
+      ).lean();
     }
   });
 });
