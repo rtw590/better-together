@@ -65,6 +65,48 @@ router.post("/comment/:id", ensureAuthenticated, function(req, res) {
   });
 });
 
+// Get Edit Single Post
+router.get("/edit/:id", ensureAuthenticated, function(req, res) {
+  WallPost.findById(req.params.id, function(err, post) {
+    if (post.author != req.user._id) {
+      req.flash("danger", "Not Authorized");
+      return res.redirect("/");
+    }
+    res.render("edit", {
+      post: post
+    });
+  });
+});
+
+//  POST to update posts
+router.post("/update/:profile/:id", function(req, res) {
+  req.checkBody("body", "Body is required").notEmpty();
+
+  // get errors
+
+  let errors = req.validationErrors();
+
+  if (errors) {
+    WallPost.findById(req.params.id, function(err, post) {
+      if (post.author != req.user._id) {
+        req.flash("danger", "Not Authorized");
+        return res.redirect("/");
+      }
+      res.render("edit_post", {
+        post: post,
+        errors: errors
+      });
+    });
+  } else {
+    WallPost.findById(req.params.id, function(err, post) {
+      post.body = req.body.body;
+      post.save();
+    });
+    req.flash("success", "Post Updated");
+    res.redirect("/users/profile/" + req.params.profile);
+  }
+});
+
 // Like a Post
 router.get("/like/:id", ensureAuthenticated, function(req, res) {
   WallPost.findById(req.params.id, function(err, post) {

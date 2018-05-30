@@ -1,0 +1,17 @@
+<div class="container">
+  {{!-- div to hold comment form --}}
+  <div class="card text-center">
+    <div class="card-header text-left">
+      Edit your post
+    </div>
+    <div class="card-body">
+      <form action="/wallPosts/update/{{ post.profilePostedOn }}/{{ post._id }}" method="POST">
+        <div class="form-group">
+          <textarea name="body" style="width:100%" placeholder="Leave a post...">{{ post.body }}</textarea>
+        </div>
+        <input type="submit" value="Update Post" style="width:65%" class="btn btn-success">
+      </form>
+    </div>
+
+  </div>
+</div>
