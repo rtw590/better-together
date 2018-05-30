@@ -107,6 +107,28 @@ router.post("/update/:profile/:id", function(req, res) {
   }
 });
 
+// Delete Post
+router.delete("/:id", function(req, res) {
+  if (!req.user._id) {
+    res.status(500).send();
+  }
+
+  let query = { _id: req.params.id };
+
+  WallPost.findById(req.params.id, function(err, post) {
+    if (post.author != req.user._id) {
+      res.status(500).send();
+    } else {
+      WallPost.remove(query, function(err) {
+        if (err) {
+          console.log(err);
+        }
+        res.send("Success");
+      });
+    }
+  });
+});
+
 // Like a Post
 router.get("/like/:id", ensureAuthenticated, function(req, res) {
   WallPost.findById(req.params.id, function(err, post) {

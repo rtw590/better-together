@@ -60,8 +60,9 @@
           </button>
           {{#if this.edit}}
           <a href="/wallPosts/edit/{{ this._id }}" class="btn btn-warning btn-md" style="">Edit</a>
-          <a href="/wallPosts/like/{{ this._id }}" class="btn btn-danger btn-md" style="">Delete</a>
-          {{/if}}
+          <a href="#" data-profile="{{ this.profilePostedOn }}" data-id="{{ this._id }}" class="btn btn-danger delete-post">Delete</a>
+          {{!--
+          <a href="#" data-id="{{ this._id }}" class="btn btn-danger delete-post">Delete</a> --}} {{/if}}
         </div>
       </div>
       {{!-- Trying to add add comment --}}
