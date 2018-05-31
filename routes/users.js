@@ -109,6 +109,26 @@ router.get("/profile/:id", function(req, res) {
                 }
               });
             }
+            if (req.user != undefined) {
+              posts = posts.map(function(object) {
+                // console.log(object.comments);
+                object.comments.map(function(element) {
+                  if (element.author == req.user._id.toString()) {
+                    // console.log(element);
+                    // return Object.assign({ edit: true }, element);
+                    return 5;
+                  } else {
+                    // return Object.assign({ edit: false }, element);
+                    return 5;
+                  }
+                });
+                return object;
+              });
+            }
+            // console.log(posts);
+            posts.forEach(function(element) {
+              console.log(element);
+            });
             res.render("profile", {
               userProfile,
               posts
@@ -119,5 +139,64 @@ router.get("/profile/:id", function(req, res) {
     }
   });
 });
+
+// Code before removing if
+// if (req.user != undefined) {
+//   console.log("inside if to map through comments");
+//   posts = posts.map(function(object) {
+//     console.log(
+//       "This is the length of the comments array" +
+//         object.comments.length
+//     );
+//     if (object.comments > 0) {
+//       object.map(function(element) {
+//         if (element.author == req.user._id.toString()) {
+//           // return Object.assign({ edit: true }, element);
+//           return null;
+//         } else {
+//           // return Object.assign({ edit: false }, element);
+//           return null;
+//         }
+//       });
+//       return element;
+//     } else {
+//       return object;
+//     }
+//   });
+// }
+
+// View User Profile -- Working before I started added edit and delete to comments
+// router.get("/profile/:id", function(req, res) {
+//   User.findOne({ username: req.params.id }, function(err, userProfile) {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       WallPost.find(
+//         { profilePostedOn: req.params.id },
+//         null,
+//         { sort: "-date" },
+//         function(err, posts) {
+//           if (err) {
+//             console.log(err);
+//           } else {
+//             if (req.user != undefined) {
+//               posts = posts.map(function(object) {
+//                 if (object.author == req.user._id.toString()) {
+//                   return Object.assign({ edit: true }, object);
+//                 } else {
+//                   return Object.assign({ edit: false }, object);
+//                 }
+//               });
+//             }
+//             res.render("profile", {
+//               userProfile,
+//               posts
+//             });
+//           }
+//         }
+//       ).lean();
+//     }
+//   });
+// });
 
 module.exports = router;
