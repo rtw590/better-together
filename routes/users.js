@@ -112,23 +112,29 @@ router.get("/profile/:id", function(req, res) {
             if (req.user != undefined) {
               posts = posts.map(function(object) {
                 // console.log(object.comments);
-                object.comments.map(function(element) {
+                commentsArray = object.comments.map(function(element) {
                   if (element.author == req.user._id.toString()) {
-                    // console.log(element);
-                    // return Object.assign({ edit: true }, element);
-                    return 5;
+                    console.log("True " + JSON.stringify(element));
+                    return Object.assign({ edit: true }, element);
+                    // return 5;
                   } else {
-                    // return Object.assign({ edit: false }, element);
-                    return 5;
+                    console.log("False " + JSON.stringify(element));
+                    return Object.assign({ edit: false }, element);
+                    // return 5;
                   }
+                  return commentsArray;
                 });
-                return object;
+                return posts;
               });
             }
+            if (req.user != undefined) {
+              posts = posts[0];
+            }
             // console.log(posts);
-            posts.forEach(function(element) {
-              console.log(element);
-            });
+            // console.log("Verses the for each");
+            // posts.forEach(function(element) {
+            //   console.log(element.comments);
+            // });
             res.render("profile", {
               userProfile,
               posts
