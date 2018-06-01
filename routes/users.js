@@ -133,47 +133,39 @@ router.get("/follow/:id", ensureAuthenticated, function(req, res) {
     if (err) {
       console.log(err);
     } else {
-      userProfile.followedBy.push(req.user._id.toString());
-      userProfile.save();
-      User.findById(req.user._id, function(err, userLoggedIn) {
-        userLoggedIn.following.push(userProfile._id.toString());
-        userLoggedIn.save();
+      if (userProfile.followedBy.includes(req.user._id.toString())) {
+        filteredArray = userProfile.followedBy.filter(
+          item => item !== req.user._id.toString()
+        );
+        userProfile.followedBy = filteredArray;
+        userProfile.save();
         res.redirect(`/users/profile/${userProfile.username}`);
-      });
+      } else {
+        userProfile.followedBy.push(req.user._id.toString());
+        userProfile.save();
+        User.findById(req.user._id, function(err, userLoggedIn) {
+          userLoggedIn.following.push(userProfile._id.toString());
+          userLoggedIn.save();
+          res.redirect(`/users/profile/${userProfile.username}`);
+        });
+      }
     }
   });
 });
 
-// View User Profile - Keep safe - working before checking if following or not
-// router.get("/profile/:id", function(req, res) {
-//   User.findOne({ username: req.params.id }, function(err, userProfile) {
+// Follow/unfollow user - Code before working on the route handling follow and unfollowing
+// router.get("/follow/:id", ensureAuthenticated, function(req, res) {
+//   User.findById(req.params.id, function(err, userProfile) {
 //     if (err) {
 //       console.log(err);
 //     } else {
-//       WallPost.find(
-//         { profilePostedOn: req.params.id },
-//         null,
-//         { sort: "-date" },
-//         function(err, posts) {
-//           if (err) {
-//             console.log(err);
-//           } else {
-//             if (req.user != undefined) {
-//               posts = posts.map(function(object) {
-//                 if (object.author == req.user._id.toString()) {
-//                   return Object.assign({ edit: true }, object);
-//                 } else {
-//                   return Object.assign({ edit: false }, object);
-//                 }
-//               });
-//             }
-//             res.render("profile", {
-//               userProfile,
-//               posts
-//             });
-//           }
-//         }
-//       ).lean();
+//       userProfile.followedBy.push(req.user._id.toString());
+//       userProfile.save();
+//       User.findById(req.user._id, function(err, userLoggedIn) {
+//         userLoggedIn.following.push(userProfile._id.toString());
+//         userLoggedIn.save();
+//         res.redirect(`/users/profile/${userProfile.username}`);
+//       });
 //     }
 //   });
 // });
