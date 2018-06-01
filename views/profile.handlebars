@@ -16,7 +16,11 @@
 
       </div>
       <div class="row text-center mb-2" style="margin: 0 auto;">
+        {{#if following}}
+        <a href="/users/follow/{{ userProfile._id }}" class="btn btn-success btn-md " style="margin: 0 auto;">Unfollow</a>
+        {{else}}
         <a href="/users/follow/{{ userProfile._id }}" class="btn btn-success btn-md " style="margin: 0 auto;">Follow</a>
+        {{/if}}
       </div>
 
     </div>

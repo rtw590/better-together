@@ -109,10 +109,16 @@ router.get("/profile/:id", function(req, res) {
                 }
               });
             }
-            console.log(userProfile);
+            let following = false;
+            if (req.user != undefined) {
+              following = userProfile.followedBy.includes(
+                req.user._id.toString()
+              );
+            }
             res.render("profile", {
               userProfile,
-              posts
+              posts,
+              following
             });
           }
         }
@@ -122,7 +128,7 @@ router.get("/profile/:id", function(req, res) {
 });
 
 // Follow/unfollow user
-router.get("/follow/:id", function(req, res) {
+router.get("/follow/:id", ensureAuthenticated, function(req, res) {
   User.findById(req.params.id, function(err, userProfile) {
     if (err) {
       console.log(err);
@@ -137,6 +143,40 @@ router.get("/follow/:id", function(req, res) {
     }
   });
 });
+
+// View User Profile - Keep safe - working before checking if following or not
+// router.get("/profile/:id", function(req, res) {
+//   User.findOne({ username: req.params.id }, function(err, userProfile) {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       WallPost.find(
+//         { profilePostedOn: req.params.id },
+//         null,
+//         { sort: "-date" },
+//         function(err, posts) {
+//           if (err) {
+//             console.log(err);
+//           } else {
+//             if (req.user != undefined) {
+//               posts = posts.map(function(object) {
+//                 if (object.author == req.user._id.toString()) {
+//                   return Object.assign({ edit: true }, object);
+//                 } else {
+//                   return Object.assign({ edit: false }, object);
+//                 }
+//               });
+//             }
+//             res.render("profile", {
+//               userProfile,
+//               posts
+//             });
+//           }
+//         }
+//       ).lean();
+//     }
+//   });
+// });
 
 // View User Profile - Failed attempt to edit/delete author's comments. May revisit with traditional loop
 // router.get("/profile/:id", function(req, res) {
@@ -197,5 +237,15 @@ router.get("/follow/:id", function(req, res) {
 //     }
 //   });
 // });
+
+// Access control
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    req.flash("danger", "Please Login");
+    res.redirect("/users/login");
+  }
+}
 
 module.exports = router;
