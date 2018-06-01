@@ -109,32 +109,7 @@ router.get("/profile/:id", function(req, res) {
                 }
               });
             }
-            if (req.user != undefined) {
-              posts = posts.map(function(object) {
-                // console.log(object.comments);
-                commentsArray = object.comments.map(function(element) {
-                  if (element.author == req.user._id.toString()) {
-                    console.log("True " + JSON.stringify(element));
-                    return Object.assign({ edit: true }, element);
-                    // return 5;
-                  } else {
-                    console.log("False " + JSON.stringify(element));
-                    return Object.assign({ edit: false }, element);
-                    // return 5;
-                  }
-                  return commentsArray;
-                });
-                return posts;
-              });
-            }
-            if (req.user != undefined) {
-              posts = posts[0];
-            }
-            // console.log(posts);
-            // console.log("Verses the for each");
-            // posts.forEach(function(element) {
-            //   console.log(element.comments);
-            // });
+            console.log(userProfile);
             res.render("profile", {
               userProfile,
               posts
@@ -146,32 +121,24 @@ router.get("/profile/:id", function(req, res) {
   });
 });
 
-// Code before removing if
-// if (req.user != undefined) {
-//   console.log("inside if to map through comments");
-//   posts = posts.map(function(object) {
-//     console.log(
-//       "This is the length of the comments array" +
-//         object.comments.length
-//     );
-//     if (object.comments > 0) {
-//       object.map(function(element) {
-//         if (element.author == req.user._id.toString()) {
-//           // return Object.assign({ edit: true }, element);
-//           return null;
-//         } else {
-//           // return Object.assign({ edit: false }, element);
-//           return null;
-//         }
-//       });
-//       return element;
-//     } else {
-//       return object;
-//     }
-//   });
-// }
+// Follow/unfollow user
+router.get("/follow/:id", function(req, res) {
+  User.findById(req.params.id, function(err, userProfile) {
+    if (err) {
+      console.log(err);
+    } else {
+      userProfile.followedBy.push(req.user._id.toString());
+      userProfile.save();
+      User.findById(req.user._id, function(err, userLoggedIn) {
+        userLoggedIn.following.push(userProfile._id.toString());
+        userLoggedIn.save();
+        res.redirect(`/users/profile/${userProfile.username}`);
+      });
+    }
+  });
+});
 
-// View User Profile -- Working before I started added edit and delete to comments
+// View User Profile - Failed attempt to edit/delete author's comments. May revisit with traditional loop
 // router.get("/profile/:id", function(req, res) {
 //   User.findOne({ username: req.params.id }, function(err, userProfile) {
 //     if (err) {
@@ -194,6 +161,32 @@ router.get("/profile/:id", function(req, res) {
 //                 }
 //               });
 //             }
+//             if (req.user != undefined) {
+//               posts = posts.map(function(object) {
+//                 // console.log(object.comments);
+//                 commentsArray = object.comments.map(function(element) {
+//                   if (element.author == req.user._id.toString()) {
+//                     console.log("True " + JSON.stringify(element));
+//                     return Object.assign({ edit: true }, element);
+//                     // return 5;
+//                   } else {
+//                     console.log("False " + JSON.stringify(element));
+//                     return Object.assign({ edit: false }, element);
+//                     // return 5;
+//                   }
+//                   return commentsArray;
+//                 });
+//                 return posts;
+//               });
+//             }
+//             if (req.user != undefined) {
+//               posts = posts[0];
+//             }
+//             // console.log(posts);
+//             // console.log("Verses the for each");
+//             // posts.forEach(function(element) {
+//             //   console.log(element.comments);
+//             // });
 //             res.render("profile", {
 //               userProfile,
 //               posts

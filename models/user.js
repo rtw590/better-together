@@ -21,7 +21,9 @@ const UserSchema = mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  followedBy: [],
+  following: []
 });
 
 const User = (module.exports = mongoose.model("User", UserSchema));
