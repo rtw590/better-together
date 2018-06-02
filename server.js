@@ -96,6 +96,9 @@ app.use("/wallPosts", wallPosts);
 let feed = require("./routes/feed");
 app.use("/feed", feed);
 
+let feedPosts = require("./routes/feedPosts");
+app.use("/feedPosts", feedPosts);
+
 app.set("port", process.env.PORT || 8000);
 
 app.listen(app.get("port"), function() {

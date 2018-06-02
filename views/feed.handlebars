@@ -1,5 +1,5 @@
 <div class="container">
-  <h1>Your Feed</h1>
+  <h1 class="text-center">Your Feed</h1>
 
   {{!-- Div to hold submit new comment and all comments --}}
   <div class="row">
@@ -12,7 +12,7 @@
           What would you like to say?
         </div>
         <div class="card-body">
-          <form action="/wallPosts/add/{{ userProfile.username }}" method="POST">
+          <form action="/feedPosts/add/{{ userProfile.username }}" method="POST">
             <div class="form-group">
               <textarea name="body" style="width:100%" placeholder="Leave a post...">{{body}}</textarea>
             </div>
@@ -33,14 +33,14 @@
           <h5 class="card-text">{{ this.body }}</h5>
         </div>
         <div class="card-footer text-muted">
-          <a href="/wallPosts/like/{{ this._id }}" class="btn btn-success btn-md " style="">Like</a>
+          <a href="/feedPosts/like/{{ this._id }}" class="btn btn-success btn-md " style="">Like</a>
 
           <button type="button" class="btn btn-success">
 
             <span class="badge badge-light">{{ this.likes }}</span>
           </button>
           {{#if this.edit}}
-          <a href="/wallPosts/edit/{{ this._id }}" class="btn btn-warning btn-md" style="">Edit</a>
+          <a href="/feedPosts/edit/{{ this._id }}" class="btn btn-warning btn-md" style="">Edit</a>
           <a href="#" data-profile="{{ this.profilePostedOn }}" data-id="{{ this._id }}" class="btn btn-danger delete-post">Delete</a>
           {{!--
           <a href="#" data-id="{{ this._id }}" class="btn btn-danger delete-post">Delete</a> --}} {{/if}}
@@ -67,7 +67,7 @@
               Leave a comment on the post
             </div>
             <div class="card-body">
-              <form action="/wallPosts/comment/{{ this._id }}" method="POST">
+              <form action="/feedPosts/comment/{{ this._id }}" method="POST">
                 <div class="form-group">
                   <textarea name="body" style="width:100%;" placeholder="Comment..."></textarea>
                 </div>
