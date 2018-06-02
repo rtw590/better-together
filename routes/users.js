@@ -109,6 +109,12 @@ router.get("/profile/:id", function(req, res) {
                 }
               });
             }
+            let isUser = false;
+            if (req.user != undefined) {
+              if (req.user._id.toString() == userProfile._id.toString()) {
+                isUser = true;
+              }
+            }
             let following = false;
             if (req.user != undefined) {
               following = userProfile.followedBy.includes(
@@ -118,7 +124,8 @@ router.get("/profile/:id", function(req, res) {
             res.render("profile", {
               userProfile,
               posts,
-              following
+              following,
+              isUser
             });
           }
         }
