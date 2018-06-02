@@ -11,6 +11,7 @@ router.get("/", ensureAuthenticated, function(req, res) {
     if (err) {
       console.log(err);
     } else {
+      userProfile.following.push(req.user._id.toString());
       WallPost.find(
         {
           author: { $in: userProfile.following }
