@@ -173,18 +173,44 @@ router.get("/follow/:id", ensureAuthenticated, function(req, res) {
   });
 });
 
-// Follow/unfollow user - Code before working on the route handling follow and unfollowing
-// router.get("/follow/:id", ensureAuthenticated, function(req, res) {
-//   User.findById(req.params.id, function(err, userProfile) {
+// View followers of a user
+router.get("/profile/followers/:id", function(req, res) {
+  User.findOne({ username: req.params.id }, function(err, userProfile) {
+    if (err) {
+      console.log(err);
+    } else {
+      User.find(
+        {
+          _id: { $in: userProfile.followedBy }
+        },
+        null,
+        { sort: "-date" },
+        function(err, following) {
+          if (err) {
+            console.log(err);
+          } else {
+            let username = req.params.id;
+            res.render("followers", {
+              username,
+              following
+            });
+          }
+        }
+      ).lean();
+    }
+  });
+});
+
+// followers list - keep safe while adding to it
+// router.get("/profile/followers/:id", function(req, res) {
+//   let username = req.params.id;
+//   User.findOne({ username: req.params.id }, function(err, userProfile) {
 //     if (err) {
 //       console.log(err);
 //     } else {
-//       userProfile.followedBy.push(req.user._id.toString());
-//       userProfile.save();
-//       User.findById(req.user._id, function(err, userLoggedIn) {
-//         userLoggedIn.following.push(userProfile._id.toString());
-//         userLoggedIn.save();
-//         res.redirect(`/users/profile/${userProfile.username}`);
+//       console.log(userProfile);
+//       res.render("followers", {
+//         username
 //       });
 //     }
 //   });
