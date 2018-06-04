@@ -339,6 +339,10 @@ router.get("/follow/following/:id/:pageOn", ensureAuthenticated, function(
   });
 });
 
+router.get("/search/:q", function(req, res) {
+  res.render("search", {});
+});
+
 // View User Profile - Failed attempt to edit/delete author's comments. May revisit with traditional loop
 // router.get("/profile/:id", function(req, res) {
 //   User.findOne({ username: req.params.id }, function(err, userProfile) {
