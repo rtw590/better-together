@@ -256,20 +256,46 @@ router.get("/follow/followers/:id/:pageOn", ensureAuthenticated, function(
   });
 });
 
-// followers list - keep safe while adding to it
-// router.get("/profile/followers/:id", function(req, res) {
-//   let username = req.params.id;
-//   User.findOne({ username: req.params.id }, function(err, userProfile) {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       console.log(userProfile);
-//       res.render("followers", {
-//         username
-//       });
-//     }
-//   });
-// });
+// View following of a user
+router.get("/profile/following/:id", function(req, res) {
+  User.findOne({ username: req.params.id }, function(err, userProfile) {
+    if (err) {
+      console.log(err);
+    } else {
+      User.find(
+        {
+          _id: { $in: userProfile.following }
+        },
+        null,
+        { sort: "-date" },
+        function(err, following) {
+          if (err) {
+            console.log(err);
+          } else {
+            if (req.user != undefined) {
+              following = following.map(function(object) {
+                if (req.user._id.toString() == object._id.toString()) {
+                  return Object.assign({ isUser: true }, object);
+                } else {
+                  if (object.followedBy.includes(req.user._id.toString())) {
+                    return Object.assign({ followingUser: true }, object);
+                  } else {
+                    return Object.assign({ followingUser: false }, object);
+                  }
+                }
+              });
+            }
+            let username = req.params.id;
+            res.render("following", {
+              username,
+              following
+            });
+          }
+        }
+      ).lean();
+    }
+  });
+});
 
 // View User Profile - Failed attempt to edit/delete author's comments. May revisit with traditional loop
 // router.get("/profile/:id", function(req, res) {
