@@ -1,5 +1,7 @@
 <div class="container">
-  <h1 class="text-center">Followers of: {{ username }}</h1>
+  <h1 class="text-center">Followers of:
+    <a href="/users/profile/{{ username }}">{{ username }}</a>
+  </h1>
 
   {{!-- TODO: Change to responsive cards rows --}} {{# each following }}
   <div class="row">

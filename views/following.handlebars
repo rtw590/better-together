@@ -1,5 +1,6 @@
 <div class="container">
-  <h1 class="text-center">{{ username }} Follows</h1>
+  <h1 class="text-center">
+    <a href="/users/profile/{{ username }}">{{ username }}</a> Follows</h1>
 
   {{!-- TODO: Change to responsive cards rows --}} {{# each following }}
   <div class="row">
@@ -16,9 +17,9 @@
           {{#if this.isUser}}
           <span></span>
           {{else}} {{#if this.followingUser}}
-          <a href="/users/follow/followers/{{ this._id }}/{{ ../username }}" class="btn btn-danger btn-md " style="margin: 0 auto;">Unfollow</a>
+          <a href="/users/follow/following/{{ this._id }}/{{ ../username }}" class="btn btn-danger btn-md " style="margin: 0 auto;">Unfollow</a>
           {{else}}
-          <a href="/users/follow/followers/{{ this._id }}/{{ ../username }}" class="btn btn-success btn-md " style="margin: 0 auto;">Follow</a>
+          <a href="/users/follow/following/{{ this._id }}/{{ ../username }}" class="btn btn-success btn-md " style="margin: 0 auto;">Follow</a>
           {{/if}} {{/if}}
         </div>
       </div>
