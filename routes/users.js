@@ -214,6 +214,48 @@ router.get("/profile/followers/:id", function(req, res) {
   });
 });
 
+// Follow/unfollow user from the followers view
+router.get("/follow/followers/:id/:pageOn", ensureAuthenticated, function(
+  req,
+  res
+) {
+  User.findById(req.params.id, function(err, userProfile) {
+    if (err) {
+      console.log(err);
+    } else {
+      // If the logged in user is in the followedBy array of the currently viewed profile,
+      // remove it from the followedBy array of the profile and remove the profile from the
+      // following array of the logged in user
+      if (userProfile.followedBy.includes(req.user._id.toString())) {
+        // console.log("The user is in the array of followed by users");
+        filteredArray = userProfile.followedBy.filter(
+          item => item !== req.user._id.toString()
+        );
+        userProfile.followedBy = filteredArray;
+        userProfile.save();
+        User.findById(req.user._id, function(err, userLoggedIn) {
+          filteredFollowing = userLoggedIn.following.filter(
+            item => item !== userProfile._id.toString()
+          );
+          userLoggedIn.following = filteredFollowing;
+          userLoggedIn.save();
+          res.redirect(`/users/profile/followers/${req.params.pageOn}`);
+        });
+      } else {
+        // If the logged in user is not in the followed by array,
+        // add user to profile's followedBy and add profile to user's following
+        userProfile.followedBy.push(req.user._id.toString());
+        userProfile.save();
+        User.findById(req.user._id, function(err, userLoggedIn) {
+          userLoggedIn.following.push(userProfile._id.toString());
+          userLoggedIn.save();
+          res.redirect(`/users/profile/followers/${req.params.pageOn}`);
+        });
+      }
+    }
+  });
+});
+
 // followers list - keep safe while adding to it
 // router.get("/profile/followers/:id", function(req, res) {
 //   let username = req.params.id;

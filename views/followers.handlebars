@@ -16,9 +16,9 @@
           {{#if this.isUser}}
           <span></span>
           {{else}} {{#if this.followingUser}}
-          <a href="/users/follow/{{ userProfile._id }}" class="btn btn-danger btn-md " style="margin: 0 auto;">Unfollow</a>
+          <a href="/users/follow/followers/{{ this._id }}/{{ ../username }}" class="btn btn-danger btn-md " style="margin: 0 auto;">Unfollow</a>
           {{else}}
-          <a href="/users/follow/{{ userProfile._id }}" class="btn btn-success btn-md " style="margin: 0 auto;">Follow</a>
+          <a href="/users/follow/followers/{{ this._id }}/{{ ../username }}" class="btn btn-success btn-md " style="margin: 0 auto;">Follow</a>
           {{/if}} {{/if}}
         </div>
       </div>
