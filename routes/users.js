@@ -189,6 +189,19 @@ router.get("/profile/followers/:id", function(req, res) {
           if (err) {
             console.log(err);
           } else {
+            if (req.user != undefined) {
+              following = following.map(function(object) {
+                if (req.user._id.toString() == object._id.toString()) {
+                  return Object.assign({ isUser: true }, object);
+                } else {
+                  if (object.followedBy.includes(req.user._id.toString())) {
+                    return Object.assign({ followingUser: true }, object);
+                  } else {
+                    return Object.assign({ followingUser: false }, object);
+                  }
+                }
+              });
+            }
             let username = req.params.id;
             res.render("followers", {
               username,
