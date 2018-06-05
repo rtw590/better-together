@@ -365,14 +365,126 @@ router.post("/search", function(req, res) {
             }
           });
         }
+        res.redirect(`/users/search/${search}`);
+      }
+    }
+  ).lean();
+});
+
+// Safe search post route while changing to redirect
+// router.post("/search", function(req, res) {
+//   const search = req.body.search;
+//   console.log(search);
+//   User.find(
+//     {
+//       username: search
+//     },
+//     null,
+//     { sort: "-1" },
+//     function(err, searchResults) {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         if (req.user != undefined) {
+//           searchResults = searchResults.map(function(object) {
+//             if (req.user._id.toString() == object._id.toString()) {
+//               return Object.assign({ isUser: true }, object);
+//             } else {
+//               if (object.followedBy.includes(req.user._id.toString())) {
+//                 return Object.assign({ followingUser: true }, object);
+//               } else {
+//                 return Object.assign({ followingUser: false }, object);
+//               }
+//             }
+//           });
+//         }
+//         res.render("search", {
+//           searchResults,
+//           search
+//         });
+//       }
+//     }
+//   ).lean();
+// });
+
+// TODO - Update once search gets better
+router.get("/search/:id", function(req, res) {
+  const search = req.params.id;
+  console.log(search);
+  User.find(
+    {
+      username: search
+    },
+    null,
+    { sort: "-1" },
+    function(err, searchResults) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (req.user != undefined) {
+          searchResults = searchResults.map(function(object) {
+            if (req.user._id.toString() == object._id.toString()) {
+              return Object.assign({ isUser: true }, object);
+            } else {
+              if (object.followedBy.includes(req.user._id.toString())) {
+                return Object.assign({ followingUser: true }, object);
+              } else {
+                return Object.assign({ followingUser: false }, object);
+              }
+            }
+          });
+        }
 
         console.log(searchResults);
         res.render("search", {
-          searchResults
+          searchResults,
+          search
         });
       }
     }
   ).lean();
+});
+
+// Follow/unfollow user from search page
+router.get("/follow/search/:id/:searchEntered", ensureAuthenticated, function(
+  req,
+  res
+) {
+  User.findById(req.params.id, function(err, userProfile) {
+    if (err) {
+      console.log(err);
+    } else {
+      // If the logged in user is in the followedBy array of the currently viewed profile,
+      // remove it from the followedBy array of the profile and remove the profile from the
+      // following array of the logged in user
+      if (userProfile.followedBy.includes(req.user._id.toString())) {
+        // console.log("The user is in the array of followed by users");
+        filteredArray = userProfile.followedBy.filter(
+          item => item !== req.user._id.toString()
+        );
+        userProfile.followedBy = filteredArray;
+        userProfile.save();
+        User.findById(req.user._id, function(err, userLoggedIn) {
+          filteredFollowing = userLoggedIn.following.filter(
+            item => item !== userProfile._id.toString()
+          );
+          userLoggedIn.following = filteredFollowing;
+          userLoggedIn.save();
+          res.redirect(`/users/search/${req.params.searchEntered}`);
+        });
+      } else {
+        // If the logged in user is not in the followed by array,
+        // add user to profile's followedBy and add profile to user's following
+        userProfile.followedBy.push(req.user._id.toString());
+        userProfile.save();
+        User.findById(req.user._id, function(err, userLoggedIn) {
+          userLoggedIn.following.push(userProfile._id.toString());
+          userLoggedIn.save();
+          res.redirect(`/users/search/${req.params.searchEntered}`);
+        });
+      }
+    }
+  });
 });
 
 // View User Profile - Failed attempt to edit/delete author's comments. May revisit with traditional loop
