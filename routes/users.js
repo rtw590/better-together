@@ -339,8 +339,40 @@ router.get("/follow/following/:id/:pageOn", ensureAuthenticated, function(
   });
 });
 
-router.get("/search/:q", function(req, res) {
-  res.render("search", {});
+router.post("/search", function(req, res) {
+  const search = req.body.search;
+  console.log(search);
+  User.find(
+    {
+      username: search
+    },
+    null,
+    { sort: "-1" },
+    function(err, searchResults) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (req.user != undefined) {
+          searchResults = searchResults.map(function(object) {
+            if (req.user._id.toString() == object._id.toString()) {
+              return Object.assign({ isUser: true }, object);
+            } else {
+              if (object.followedBy.includes(req.user._id.toString())) {
+                return Object.assign({ followingUser: true }, object);
+              } else {
+                return Object.assign({ followingUser: false }, object);
+              }
+            }
+          });
+        }
+
+        console.log(searchResults);
+        res.render("search", {
+          searchResults
+        });
+      }
+    }
+  ).lean();
 });
 
 // View User Profile - Failed attempt to edit/delete author's comments. May revisit with traditional loop
