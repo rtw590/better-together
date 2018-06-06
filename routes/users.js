@@ -347,9 +347,17 @@ router.post("/search", function(req, res) {
 // Route for search
 router.get("/search/:id", function(req, res) {
   const search = req.params.id;
+  const searchLastname = req.params.id.split(" ")[1];
   User.find(
     {
-      username: search
+      $or: [
+        { username: search },
+        { lastname: search.charAt(0).toUpperCase() + search.slice(1) },
+        {
+          lastname:
+            searchLastname.charAt(0).toUpperCase() + searchLastname.slice(1)
+        }
+      ]
     },
     null,
     { sort: "-1" },
