@@ -341,76 +341,12 @@ router.get("/follow/following/:id/:pageOn", ensureAuthenticated, function(
 
 router.post("/search", function(req, res) {
   const search = req.body.search;
-  console.log(search);
-  User.find(
-    {
-      username: search
-    },
-    null,
-    { sort: "-1" },
-    function(err, searchResults) {
-      if (err) {
-        console.log(err);
-      } else {
-        if (req.user != undefined) {
-          searchResults = searchResults.map(function(object) {
-            if (req.user._id.toString() == object._id.toString()) {
-              return Object.assign({ isUser: true }, object);
-            } else {
-              if (object.followedBy.includes(req.user._id.toString())) {
-                return Object.assign({ followingUser: true }, object);
-              } else {
-                return Object.assign({ followingUser: false }, object);
-              }
-            }
-          });
-        }
-        res.redirect(`/users/search/${search}`);
-      }
-    }
-  ).lean();
+  res.redirect(`/users/search/${search}`);
 });
 
-// Safe search post route while changing to redirect
-// router.post("/search", function(req, res) {
-//   const search = req.body.search;
-//   console.log(search);
-//   User.find(
-//     {
-//       username: search
-//     },
-//     null,
-//     { sort: "-1" },
-//     function(err, searchResults) {
-//       if (err) {
-//         console.log(err);
-//       } else {
-//         if (req.user != undefined) {
-//           searchResults = searchResults.map(function(object) {
-//             if (req.user._id.toString() == object._id.toString()) {
-//               return Object.assign({ isUser: true }, object);
-//             } else {
-//               if (object.followedBy.includes(req.user._id.toString())) {
-//                 return Object.assign({ followingUser: true }, object);
-//               } else {
-//                 return Object.assign({ followingUser: false }, object);
-//               }
-//             }
-//           });
-//         }
-//         res.render("search", {
-//           searchResults,
-//           search
-//         });
-//       }
-//     }
-//   ).lean();
-// });
-
-// TODO - Update once search gets better
+// Route for search
 router.get("/search/:id", function(req, res) {
   const search = req.params.id;
-  console.log(search);
   User.find(
     {
       username: search
@@ -434,8 +370,6 @@ router.get("/search/:id", function(req, res) {
             }
           });
         }
-
-        console.log(searchResults);
         res.render("search", {
           searchResults,
           search
