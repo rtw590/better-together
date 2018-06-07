@@ -9,6 +9,9 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
 
+//Bring in User Model
+let User = require("./models/user");
+
 // Set storage engine
 // If issues, change destination to have ./public
 const storage = multer.diskStorage({
@@ -125,12 +128,15 @@ app.get("/", function(req, res) {
 });
 
 // Route for uploading profile pictures
-app.get("/profilepicture", function(req, res) {
-  res.render("profilePicture");
+app.get("/profilepicture/:id", function(req, res) {
+  let profileOn = req.params.id;
+  res.render("profilePicture", {
+    profileOn
+  });
 });
 
 // POST route for uploading profile pictures
-app.post("/upload", (req, res) => {
+app.post("/upload/:id", (req, res) => {
   upload(req, res, err => {
     if (err) {
       req.flash("success", "Please upload an image file under 10mb");
@@ -138,11 +144,21 @@ app.post("/upload", (req, res) => {
     } else {
       if (req.file == undefined) {
         req.flash("success", "No file selected");
-        res.redirect("/profilepicture");
+        res.redirect(`/profilepicture/${req.params.id}`);
       } else {
-        console.log(req.file.filename);
-        req.flash("success", "Profile picture updated");
-        res.redirect("/profilepicture");
+        User.findById(req.params.id, function(err, userProfile) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(req.file.filename);
+            let picture = req.file.filename;
+            userProfile.profilePicture = `/uploads/${picture}`;
+            console.log(userProfile.profilePicture);
+            userProfile.save();
+            req.flash("success", "Profile picture updated");
+            res.redirect(`/profilepicture/${req.params.id}`);
+          }
+        });
       }
     }
   });

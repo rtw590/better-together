@@ -4,8 +4,11 @@
   <div class="row">
     <div class="col-4"></div>
     <div class="col-4">
-      <img src="/images/placeholder.jpg" class="img-fluid rounded" alt="Responsive image"> {{!-- TODO: Name gets off center and remains too large as screen gets smaller --}}
+      <img src="{{ userProfile.profilePicture }}" class="img-fluid rounded" alt="Responsive image"> {{!-- TODO: Name gets off center and remains too large as screen gets smaller --}}
       <h1 class="text-center" style="margin-bottom: 0px">{{ userProfile.username }}</h1>
+      {{#if isUser}}
+      <a href="/profilepicture/{{ userProfile._id }}" class="btn btn-danger btn-md" style="margin: 0 auto;">Change Profile Picture</a>
+      {{/if}}
       <div class="row mb-2 text-center">
         <div class="col text-center">
           <a href="/users/profile/followers/{{ userProfile.username }}">Followers</a>

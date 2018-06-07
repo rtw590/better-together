@@ -23,7 +23,11 @@ const UserSchema = mongoose.Schema({
     required: true
   },
   followedBy: [],
-  following: []
+  following: [],
+  profilePicture: {
+    type: String,
+    default: "/images/placeholder.jpg"
+  }
 });
 
 const User = (module.exports = mongoose.model("User", UserSchema));
