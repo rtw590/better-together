@@ -1,13 +1,12 @@
 <div class="container">
-  {{!-- Section For Profile Picture and username --}} {{!-- TODO: Make the image work better when resized and for different
-  photo ratios --}}
+
   <div class="row">
-    <div class="col-4"></div>
-    <div class="col-4">
-      <img src="{{ userProfile.profilePicture }}" class="img-fluid rounded" alt="Responsive image"> {{!-- TODO: Name gets off center and remains too large as screen gets smaller --}}
+    <div class="col-sm-1 col-md-3 col-lg-4"></div>
+    <div class="col-sm-10 col-md-6 col-lg-4">
+      <img src="{{ userProfile.profilePicture }}" class="rounded" alt="Responsive image" style="width: 100%;">
       <h1 class="text-center" style="margin-bottom: 0px">{{ userProfile.username }}</h1>
       {{#if isUser}}
-      <a href="/profilepicture/{{ userProfile._id }}" class="btn btn-danger btn-md" style="margin: 0 auto;">Change Profile Picture</a>
+      <a href="/profilepicture/{{ userProfile._id }}" class="btn btn-danger btn-md" style="width: 100%;">Change Profile Picture</a>
       {{/if}}
       <div class="row mb-2 text-center">
         <div class="col text-center">
@@ -29,7 +28,7 @@
       </div>
 
     </div>
-    <div class="col-4"></div>
+    <div class="col-sm-1 col-md-3 col-lg-4"></div>
   </div>
 
 
