@@ -128,12 +128,27 @@ app.get("/", function(req, res) {
 });
 
 // Route for uploading profile pictures
-app.get("/profilepicture/:id", function(req, res) {
+app.get("/profilepicture/:id", ensureAuthenticated, function(req, res) {
   let profileOn = req.params.id;
-  res.render("profilePicture", {
-    profileOn
-  });
+  if (req.user._id == req.params.id) {
+    res.render("profilePicture", {
+      profileOn
+    });
+  } else {
+    req.flash("danger", "Not Authorized");
+    res.redirect("/feed");
+  }
 });
+
+// Access control
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    req.flash("danger", "Please Login");
+    res.redirect("/users/login");
+  }
+}
 
 // POST route for uploading profile pictures
 app.post("/upload/:id", (req, res) => {
@@ -156,7 +171,7 @@ app.post("/upload/:id", (req, res) => {
             console.log(userProfile.profilePicture);
             userProfile.save();
             req.flash("success", "Profile picture updated");
-            res.redirect(`/profilepicture/${req.params.id}`);
+            res.redirect(`/users/profile/${userProfile.username}`);
           }
         });
       }
