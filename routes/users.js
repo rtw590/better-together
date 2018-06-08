@@ -347,15 +347,12 @@ router.post("/search", function(req, res) {
 // Route for search
 router.get("/search/:id", function(req, res) {
   const search = req.params.id;
-  console.log(search.includes(" "));
   let searchLastname = " ";
   if (search.includes(" ")) {
     searchLastname = req.params.id.split(" ")[1];
     searchLastname =
       searchLastname.charAt(0).toUpperCase() + searchLastname.slice(1);
-    console.log("the if did run");
   } else {
-    console.log("the if did not run");
     searchLastname = search;
   }
   User.find(

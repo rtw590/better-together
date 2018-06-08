@@ -165,7 +165,6 @@ app.post("/upload/:id", (req, res) => {
           if (err) {
             console.log(err);
           } else {
-            console.log(req.file.filename);
             let picture = req.file.filename;
             userProfile.profilePicture = `/uploads/${picture}`;
             console.log(userProfile.profilePicture);
