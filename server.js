@@ -155,7 +155,7 @@ app.post("/upload/:id", (req, res) => {
   upload(req, res, err => {
     if (err) {
       req.flash("success", "Please upload an image file under 10mb");
-      res.redirect("/profilepicture");
+      res.redirect(`/profilepicture/${req.params.id}`);
     } else {
       if (req.file == undefined) {
         req.flash("success", "No file selected");
@@ -167,7 +167,6 @@ app.post("/upload/:id", (req, res) => {
           } else {
             let picture = req.file.filename;
             userProfile.profilePicture = `/uploads/${picture}`;
-            console.log(userProfile.profilePicture);
             userProfile.save();
             req.flash("success", "Profile picture updated");
             res.redirect(`/users/profile/${userProfile.username}`);

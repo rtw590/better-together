@@ -134,6 +134,54 @@ router.get("/profile/:id", function(req, res) {
   });
 });
 
+// Logged in User view profile
+router.get("/profile", ensureAuthenticated, function(req, res) {
+  User.findById(req.user._id.toString(), function(err, userProfile) {
+    if (err) {
+      console.log(err);
+    } else {
+      WallPost.find(
+        { profilePostedOn: userProfile.username },
+        null,
+        { sort: "-date" },
+        function(err, posts) {
+          if (err) {
+            console.log(err);
+          } else {
+            if (req.user != undefined) {
+              posts = posts.map(function(object) {
+                if (object.author == req.user._id.toString()) {
+                  return Object.assign({ edit: true }, object);
+                } else {
+                  return Object.assign({ edit: false }, object);
+                }
+              });
+            }
+            let isUser = false;
+            if (req.user != undefined) {
+              if (req.user._id.toString() == userProfile._id.toString()) {
+                isUser = true;
+              }
+            }
+            let following = false;
+            if (req.user != undefined) {
+              following = userProfile.followedBy.includes(
+                req.user._id.toString()
+              );
+            }
+            res.render("profile", {
+              userProfile,
+              posts,
+              following,
+              isUser
+            });
+          }
+        }
+      ).lean();
+    }
+  });
+});
+
 // Follow/unfollow user
 router.get("/follow/:id", ensureAuthenticated, function(req, res) {
   User.findById(req.params.id, function(err, userProfile) {
