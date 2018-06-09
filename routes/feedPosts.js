@@ -16,11 +16,8 @@ router.post("/add/:id", ensureAuthenticated, function(req, res) {
 
   // TODO change what happens when there are errors
   if (errors) {
-    res.render("add_post", {
-      errors: errors,
-      body: body,
-      title: title
-    });
+    req.flash("success", "Post Empty");
+    res.redirect("/feed");
   } else {
     User.findById(req.user._id, function(err, user) {
       let post = new WallPost();
@@ -47,21 +44,26 @@ router.post("/add/:id", ensureAuthenticated, function(req, res) {
 router.post("/comment/:id", ensureAuthenticated, function(req, res) {
   WallPost.findById(req.params.id, function(err, post) {
     User.findById(req.user._id, function(err, user) {
-      post.comments.push({
-        author: req.user._id,
-        body: req.body.body,
-        username: user.username
-      });
-      post.save(function(err) {
-        if (err) {
-          console.log(err);
-          return;
-        } else {
-          // TODO CHange redirect
-          req.flash("success", "Comment Added");
-          res.redirect("/feed");
-        }
-      });
+      if (req.body.body.length > 0) {
+        post.comments.push({
+          author: req.user._id,
+          body: req.body.body,
+          username: user.username
+        });
+        post.save(function(err) {
+          if (err) {
+            console.log(err);
+            return;
+          } else {
+            // TODO CHange redirect
+            req.flash("success", "Comment Added");
+            res.redirect("/feed");
+          }
+        });
+      } else {
+        req.flash("success", "Comment Empty");
+        res.redirect("/feed");
+      }
     });
   });
 });
