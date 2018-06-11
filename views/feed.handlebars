@@ -22,7 +22,27 @@
 
       </div>
 
-      {{!-- Div to display all wall posts --}}
+      {{#if notFollowing}}
+      <div class="card-deck pt-3">
+
+        <div class="card">
+          <div class="card-header" style="font-size:6em; color:rgb(71, 99, 255); width: 100%; margin: 0 auto; text-align: center;">
+            <i class="fa fa-address-book text-center"></i>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Start following people and their posts will show up here!</h4>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" style="font-size:6em; color:rgb(40, 167, 69); margin: 0 auto; width: 100%; text-align: center;">
+            <i class="fa fa-comments"></i>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Post to your feed and your followers will see what you have to say!</h4>
+          </div>
+        </div>
+      </div>
+      {{/if}} {{!-- Div to display all wall posts --}}
       <br> {{# each posts }}
       <div class="card text-center">
         <div class="card-header text-left">

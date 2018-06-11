@@ -37,10 +37,15 @@ router.get("/", ensureAuthenticated, function(req, res) {
                 req.user._id.toString()
               );
             }
+            let notFollowing = false;
+            if (posts.length == 0) {
+              notFollowing = true;
+            }
             res.render("feed", {
               userProfile,
               posts,
-              following
+              following,
+              notFollowing
             });
           }
         }
