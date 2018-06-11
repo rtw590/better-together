@@ -37,3 +37,8 @@
   white-space: normal !important;
   word-wrap: break-word;
 }
+
+.logoFont {
+  font-family: "Pacifico", cursive;
+  color: tomato;
+}
